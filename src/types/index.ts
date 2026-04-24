@@ -22,3 +22,25 @@ export interface IBuyer {
   phone: string;
   address: string;
 }
+
+// Тип для ответа сервера со списком товаров
+export interface IProductsResponse {
+    items: IProduct[];
+    total: number;
+}
+
+// Тип для отправки заказа на сервер (используем существующий IBuyer + добавляем new поля)
+export interface IOrderRequest {
+    payment: TPayment;
+    email: string;    
+    phone: string;    
+    address: string;  
+    total: number;          
+    items: string[];        
+}
+
+// Тип для ответа сервера после оформления заказа
+export interface IOrderResponse {
+    id: string;             
+    total: number;       
+}
