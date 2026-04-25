@@ -46,4 +46,3 @@ export class CartModel {
     }, 0);
   }
 }
-

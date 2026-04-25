@@ -1,8 +1,12 @@
-export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+export type ApiPostMethods = "POST" | "PUT" | "DELETE";
 
 export interface IApi {
-    get<T extends object>(uri: string): Promise<T>;
-    post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
+  get<T extends object>(uri: string): Promise<T>;
+  post<T extends object>(
+    uri: string,
+    data: object,
+    method?: ApiPostMethods,
+  ): Promise<T>;
 }
 
 export interface IProduct {
@@ -14,7 +18,7 @@ export interface IProduct {
   price: number | null;
 }
 
-export type TPayment = 'card' | 'cash' | '';
+export type TPayment = "card" | "cash" | "";
 
 export interface IBuyer {
   payment: TPayment;
@@ -23,24 +27,24 @@ export interface IBuyer {
   address: string;
 }
 
-// Тип для ответа сервера со списком товаров
+// Интерфейс для ответа сервера при запросе списка товаров
 export interface IProductsResponse {
-    items: IProduct[];
-    total: number;
+  items: IProduct[]; // массив товаров
+  total: number; // общее количество товаров
 }
 
-// Тип для отправки заказа на сервер (используем существующий IBuyer + добавляем new поля)
+// Интерфейс для отправки заказа на сервер
 export interface IOrderRequest {
-    payment: TPayment;
-    email: string;    
-    phone: string;    
-    address: string;  
-    total: number;          
-    items: string[];        
+  payment: TPayment;
+  email: string;
+  phone: string;
+  address: string;
+  total: number;
+  items: string[];
 }
 
-// Тип для ответа сервера после оформления заказа
+// Интерфейс для ответа сервера после оформления заказа
 export interface IOrderResponse {
-    id: string;             
-    total: number;       
+  id: string; //номер заказа
+  total: number; // общая сумма заказа
 }
