@@ -18,10 +18,10 @@ export interface IProduct {
   price: number | null;
 }
 
-export type TPayment = "card" | "cash" | "";
+export type TPayment = "card" | "cash";
 
 export interface IBuyer {
-  payment: TPayment;
+  payment: TPayment | null;
   email: string;
   phone: string;
   address: string;
@@ -34,11 +34,7 @@ export interface IProductsResponse {
 }
 
 // Интерфейс для отправки заказа на сервер
-export interface IOrderRequest {
-  payment: TPayment;
-  email: string;
-  phone: string;
-  address: string;
+export interface IOrderRequest extends IBuyer {
   total: number;
   items: string[];
 }
@@ -48,3 +44,5 @@ export interface IOrderResponse {
   id: string; //номер заказа
   total: number; // общая сумма заказа
 }
+
+export type TOrderValidationErrors = Partial<Record<keyof IBuyer, string>>;

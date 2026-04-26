@@ -188,3 +188,6 @@ interface IBuyer {
 `getProducts(): Promise<IProduct[]>`
 Выполняет GET-запрос на эндпоинт `/product` для получения списка всех товаров.
 
+`createOrder(order: IOrderRequest): Promise<IOrderResponse>`
+
+Выполняет POST-запрос на эндпоинт `/order` для отправки данных заказа на сервер.

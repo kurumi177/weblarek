@@ -7,28 +7,21 @@ import {
 } from "../../types";
 
 export class LarekApi {
-  private _api: IApi;
-  private _baseUri: string;
+  private api: IApi;
 
-  constructor(api: IApi, baseUri: string = "") {
-    this._api = api;
-    this._baseUri = baseUri;
+  constructor(api: IApi) {
+    this.api = api;
   }
 
   // Метод для получения товаров (GET)
-  async getProducts(): Promise<IProduct[]> {
-    const response = await this._api.get<IProductsResponse>(
-      `${this._baseUri}/product`,
-    );
-    return response.items;
+  async getProducts(): Promise<IProductsResponse> {
+    const response = await this.api.get<IProductsResponse>(`/product`);
+    return response;
   }
 
   // Метод для отправки заказа (POST)
   async createOrder(order: IOrderRequest): Promise<IOrderResponse> {
-    const response = await this._api.post<IOrderResponse>(
-      `${this._baseUri}/order`,
-      order,
-    );
+    const response = await this.api.post<IOrderResponse>(`/order`, order);
     return response;
   }
 }
