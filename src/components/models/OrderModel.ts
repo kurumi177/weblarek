@@ -40,7 +40,7 @@ export class OrderModels {
   }
 
   //валидация данных. Возвращает объект с ошибками. Если поле валидно (не пустое), оно отсутствует в объекте. Пример: `{ payment: 'Не выбран вид оплаты', email: 'Укажите email' }
-  validate(): Partial<Record<keyof IBuyer, string>> {
+  validate(): TOrderValidationErrors {
     const errors: TOrderValidationErrors = {};
 
     // Проверка способа оплаты
