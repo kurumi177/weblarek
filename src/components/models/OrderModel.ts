@@ -1,37 +1,33 @@
 import { IBuyer, TOrderValidationErrors, TPayment } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class OrderModels {
   private payment: TPayment | null;
   private address: string;
   private email: string;
   private phone: string;
+  formErrors: TOrderValidationErrors = {};
 
-  constructor() {
+  constructor(protected events: IEvents) {
     this.payment = null;
     this.address = "";
     this.email = "";
     this.phone = "";
   }
 
-  //сохранение данных в модели. Позволяет сохранить как все данные, так и отдельные поля (например, только адрес или только телефон)
-  setData(data: Partial<IBuyer>): void {
-    if (data.payment !== undefined) this.payment = data.payment;
-    if (data.email !== undefined) this.email = data.email;
-    if (data.address !== undefined) this.address = data.address;
-    if (data.phone !== undefined) this.phone = data.phone;
+  setField(field: keyof IBuyer, value: string) {
+    if (field === 'payment') {
+      this.payment = value as TPayment;
+    } else {
+      this[field] = value;
+    }
+    this.validateOrder();
   }
 
-  //получение всех данных покупателя
   getData(): IBuyer {
-    return {
-      payment: this.payment,
-      address: this.address,
-      email: this.email,
-      phone: this.phone,
-    };
+    return { payment: this.payment, address: this.address, email: this.email, phone: this.phone };
   }
 
-  //очистка всех данных покупателя
   clear(): void {
     this.payment = null;
     this.address = "";
@@ -39,27 +35,15 @@ export class OrderModels {
     this.phone = "";
   }
 
-  //валидация данных. Возвращает объект с ошибками. Если поле валидно (не пустое), оно отсутствует в объекте. Пример: `{ payment: 'Не выбран вид оплаты', email: 'Укажите email' }
-  validate(): TOrderValidationErrors {
-    const errors: TOrderValidationErrors = {};
-
-    // Проверка способа оплаты
-    if (!this.payment) {
-      errors.payment = "Не выбран вид оплаты";
-    }
-
-    if (!this.address.trim()) {
-      errors.address = "Введите адрес доставки";
-    }
-
-    if (!this.email.trim()) {
-      errors.email = "Укажите email";
-    }
-
-    if (!this.phone.trim()) {
-      errors.phone = "Укажите номер телефона";
-    }
-
-    return errors;
+  validateOrder() {
+    const errors: typeof this.formErrors = {};
+    if (!this.payment) errors.payment = "Не выбран вид оплаты";
+    if (!this.address) errors.address = "Укажите адрес";
+    if (!this.email) errors.email = "Укажите email";
+    if (!this.phone) errors.phone = "Укажите телефон";
+    
+    this.formErrors = errors;
+    this.events.emit('formErrors:change', this.formErrors);
+    return Object.keys(errors).length === 0;
   }
 }

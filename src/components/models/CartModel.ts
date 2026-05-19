@@ -1,45 +1,38 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class CartModel {
   private items: IProduct[];
 
-  constructor() {
+  constructor(protected events: IEvents) {
     this.items = [];
   }
 
-  //получение массива товаров, которые находятся в корзине
-  getItems(): IProduct[] {
-    return this.items;
-  }
+  getItems(): IProduct[] { return this.items; }
 
-  //добавление товара, который был получен в параметре, в массив корзины
   addItem(item: IProduct): void {
     if (!this.hasItem(item.id)) {
       this.items.push(item);
+      this.events.emit('basket:changed', this.items);
     }
   }
 
-  //проверка наличия товара в корзине по его id, полученному в параметре метода
   hasItem(id: string): boolean {
     return this.items.some((item) => item.id === id);
   }
 
-  //удаление товара, полученного в параметре, из массива корзины
   removeItem(id: string): void {
     this.items = this.items.filter((item) => item.id !== id);
+    this.events.emit('basket:changed', this.items);
   }
 
-  //очистка корзины
   clear(): void {
     this.items = [];
+    this.events.emit('basket:changed', this.items);
   }
 
-  //получение количества товаров в корзине
-  getCount(): number {
-    return this.items.length;
-  }
+  getCount(): number { return this.items.length; }
 
-  //получение стоимости всех товаров в корзине
   getTotal(): number {
     return this.items.reduce((total, item) => total + (item.price ?? 0), 0);
   }

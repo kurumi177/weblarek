@@ -1,36 +1,30 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class CatalogModel {
   private items: IProduct[];
   private selectedItem: IProduct | null;
 
-  constructor() {
+  constructor(protected events: IEvents) {
     this.items = [];
     this.selectedItem = null;
   }
 
-  //сохранение массива товаров, полученного в параметрах метода
   setItems(items: IProduct[]): void {
     this.items = items;
+    this.events.emit('items:changed', this.items);
   }
 
-  //получение массива товаров из модели
-  getItems(): IProduct[] {
-    return this.items;
-  }
+  getItems(): IProduct[] { return this.items; }
 
-  //получение одного товара по его id
   getItemById(id: string): IProduct | undefined {
     return this.items.find((item) => item.id === id);
   }
 
-  //сохранение товара для подробного отображения
   setSelectedItem(item: IProduct): void {
     this.selectedItem = item;
+    this.events.emit('preview:changed', item);
   }
 
-  //получение товара для подробного отображения
-  getSelectedItem(): IProduct | null {
-    return this.selectedItem;
-  }
+  getSelectedItem(): IProduct | null { return this.selectedItem; }
 }
